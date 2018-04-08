@@ -14,6 +14,10 @@ class Schema {
                 $schema = $this->getEventUploadsSchema($tableName); 
 
                 break;
+
+            default :
+
+              break;
         }
 
         return $schema;
