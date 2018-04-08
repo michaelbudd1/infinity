@@ -13,7 +13,8 @@ class Validator
 
 				if(FALSE === call_user_func(array('self', $function), $value, $rowData)) {
 
-                    throw new \Exception( "The field \"" . $field . "\" failed validation" );
+                    throw new \Exception("The field \"" . $field . "\" failed validation on rule \"" . 
+                        $function . "\"");
 				}
             }
         }
@@ -50,7 +51,7 @@ class Validator
 
     private static function requiredIfValueIsNonZero($value, array $rowData)
     {
-        if(trim($rowData['eventValue']) === "0") {
+        if(trim($rowData['eventValue']) !== "0" && $rowData['eventValue'] === 0) {
 
             return self::isNotEmpty($value, $rowData);
 
@@ -77,24 +78,47 @@ class Validator
         return FALSE;
     }
 
+    public static function isValidCSVFile(String $file) {
+
+        $sysLogger = new \Application\System\Syslog;
+
+        if(1 === preg_match( '/\\t/', file_get_contents(UPLOADS_FOLDER . '/' . $file))) {
+
+            $errMsg = "Please check the file " . $file . ". It does not appear to be a " .
+                      "correctly formatted CSV";
+
+            $sysLogger->log( $errMsg, LOG_ERR );
+
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
     private static function isCurrencyCode($value, array $rowData)
     {
+        if(trim($rowData['eventValue']) === "0" || $rowData['eventValue'] === 0) {
+
+            if(trim($value) === "") {
+
+                return TRUE;
+            }
+        }
+
         return in_array(strtoupper($value), self::getCurrencyCodes());
     }
 
     private static function isValidDateTime($value, array $rowData) 
     {
-        $isValid = TRUE;
-
         $patternToMatch = "^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9] " .
             "[0-9][0-9]\:[0-9][0-9]\:[0-9][0-9]$";
 
         if( 0 === preg_match( '/' . $patternToMatch . '/', $value ) ) {
 
-            $isValid = FALSE;   
+            return FALSE;  
         }
 
-        return $isValid;
+        return TRUE;
     }
 
     private static function getCurrencyCodes() {

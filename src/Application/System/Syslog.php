@@ -1,7 +1,7 @@
 <?php
 namespace Application\System;
 
-class Syslog 
+class Syslog implements LoggerInterface
 {
 
     public function log(String $msg, $type) {

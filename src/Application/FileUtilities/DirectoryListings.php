@@ -1,7 +1,7 @@
 <?php
 namespace Application\FileUtilities;
 
-class DirectoryListings 
+class DirectoryListings implements FileLister
 {
     private $folder;
     private $fileType;
@@ -15,9 +15,8 @@ class DirectoryListings
         $this->fetchFilesInsideDirectory($folder, $fileType);
     }
 
-    public function getFiles() 
+    public function getFiles() : array
     {
-
         return $this->files;
     }
 

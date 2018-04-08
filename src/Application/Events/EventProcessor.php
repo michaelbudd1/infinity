@@ -43,7 +43,7 @@ class EventProcessor
 
     protected function rowDataIsValid(array $rowData) 
     {
-        foreach( $rowData as $field => $value ) {
+        foreach($rowData as $field => $value) {
 
             Validator::validate( $field, $value, $rowData );
         }
