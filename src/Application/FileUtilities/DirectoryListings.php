@@ -7,16 +7,18 @@ class DirectoryListings
     private $fileType;
     private $files = [];
 
-    public function __construct(String $folder, String $fileType) {
+    public function __construct(String $folder, String $fileType) 
+    {
 
         $this->folder 	= $folder;
         $this->fileType = $fileType;
         $this->fetchFilesInsideDirectory($folder, $fileType);
     }
 
-    public function getFiles() {
+    public function getFiles() 
+    {
 
-    	return $this->files;
+        return $this->files;
     }
 
     private function fetchFilesInsideDirectory(String $directory, String $fileType)
@@ -25,9 +27,9 @@ class DirectoryListings
 
         if(TRUE === $this->folderIsReadable($directory)) {
 
-    		$files = scandir($directory);
+            $files = scandir($directory);
 
-        	$returnArray = $this->returnFilesOfType($files, $fileType);
+            $returnArray = $this->returnFilesOfType($files, $fileType);
         }
 
         $this->files = $returnArray;
@@ -36,18 +38,18 @@ class DirectoryListings
 
     private function folderIsReadable(String $directory) 
     {
-    	$isReadable = TRUE;
+        $isReadable = TRUE;
 
         try {
 
-        	if( FALSE === scandir($directory) ) {
+            if(FALSE === scandir($directory)) {
 
-        		$isReadable = FALSE;
-        	}
+                $isReadable = FALSE;
+            }
 
         } catch( \Exception $e ) {
 
- 			$isReadable = FALSE;
+            $isReadable = FALSE;
         }
 
         return $isReadable;
@@ -55,18 +57,18 @@ class DirectoryListings
 
     private function returnFilesOfType(array $files, String $passedFileType) {
 
-    	$returnArray = [];
+        $returnArray = [];
 
-		foreach( $files as $file ) {
+        foreach( $files as $file ) {
 
-			$fileType = pathinfo( $file, PATHINFO_EXTENSION );
+            $fileType = pathinfo( $file, PATHINFO_EXTENSION );
 
-			if(strtolower($fileType) === strtolower($passedFileType)) {
+            if(strtolower($fileType) === strtolower($passedFileType)) {
 
-				$returnArray[] = $file;
-			}
-		}
+                $returnArray[] = $file;
+            }
+        }
 
-		return $returnArray;
+        return $returnArray;
     }
 }
